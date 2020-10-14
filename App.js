@@ -1,21 +1,75 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import * as React from 'react';
+import { View, Text, StyleSheet, StatusBar, ScrollView, TextInput, Button } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import NewNote from './NewNote';
+import { MaterialIcons } from '@expo/vector-icons'; 
+import HomeScreen from './HomeScreen';
 
-export default function App() {
+const Stack = createStackNavigator();
+
+function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator 
+        initialRouteName="Home" 
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: COLOR1,
+          },
+          headerTintColor: 'white',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+          headerTitleAlign:'center'
+        }}
+      >
+        <Stack.Screen 
+          name="Home" 
+          component={HomeScreen} 
+          options={{ 
+            title: 'Ghi chú của bạn', 
+          }}
+          
+        />
+        <Stack.Screen 
+          name="NewNote" 
+          component={NewNote}
+          options={ ({ navigation, route }) => ({ 
+            title: 'Ghi chú mới', 
+            headerRight: () => (
+              <MaterialIcons 
+                name="check" 
+                size={24} 
+                style={styles.buttonSave} 
+                onPress={() => {
+                  navigation.navigate(
+                    'Home',
+                    {
+                      newNoteTitle: 'Test 0',
+                      newNoteContent: 'test something',
+                    });
+                }}
+              />
+            )
+            
+          })}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
+const COLOR1 = '#28df99';
+const COLOR2 = '#99f3bd';
+const COLOR3 = '#d2f6c5';
+const COLOR4 = '#f6f7d4';
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+  buttonSave: {
+    color: 'white',
+    paddingRight: 15,
+  }
+
+})
+
+export default App;
