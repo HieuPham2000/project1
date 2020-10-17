@@ -2,7 +2,7 @@ import * as React from 'react';
 import { View, Text, StyleSheet, StatusBar, ScrollView, TextInput, Button } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import NewNote from './NewNote';
+import Note from './Note';
 import { MaterialIcons } from '@expo/vector-icons'; 
 import HomeScreen from './HomeScreen';
 
@@ -33,11 +33,11 @@ function App() {
           
         />
         <Stack.Screen 
-          name="NewNote" 
-          component={NewNote}
+          name="Note" 
+          component={Note}
           options={ ({ navigation, route }) => ({ 
             title: 'Ghi chú mới', 
-            headerRight: () => (
+            /* headerRight: () => (
               <MaterialIcons 
                 name="check" 
                 size={24} 
@@ -51,8 +51,7 @@ function App() {
                     });
                 }}
               />
-            )
-            
+            ) */
           })}
         />
       </Stack.Navigator>

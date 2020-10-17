@@ -1,7 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { Component } from 'react';
-import { StyleSheet, Text, TextInput, View, ScrollView } from 'react-native';
+import { StyleSheet, Text, TextInput, View, ScrollView, Alert } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons'; 
+import {db} from './src/config';
 
 export default class NewNote extends React.Component {
   constructor(props) {
@@ -21,6 +22,19 @@ export default class NewNote extends React.Component {
     this.setState({
       content: text,
     })
+  }
+  saveNote() {
+    if(this.state.title!=='' && this.state.content!=='') {
+      db.ref('/notes').push({
+        title: this.state.title,
+        content: this.state.content,
+        date: (new Date()).toISOString() // date: (new Date()).toString() có được?
+      });
+      Alert.alert('Thông báo!', 'Ghi chú mới đã được tạo!');
+    } else {
+      Alert.alert('Thông báo!', 'Ghi chú rỗng đã bị xóa!');
+    }
+    this.props.navigation.navigate('Home');
   }
   render() {
     return (
@@ -43,6 +57,7 @@ export default class NewNote extends React.Component {
               placeholder='Tiêu đề'
               multiline={true}
               numberOfLines={1}
+              autoFocus={true}
               onChangeText={this.handleChangeTitle.bind(this)}
               value={this.state.title}
             />
@@ -53,21 +68,21 @@ export default class NewNote extends React.Component {
                 style={styles.content}
                 placeholder='Ghi chú'
                 multiline={true}
-                numberOfLines={15}
-                autoFocus={true}
+                numberOfLines={8}
                 onChangeText={this.handleChangeContent.bind(this)}
                 value={this.state.content}
             />
           </View>
-          <Text>{this.state.title}</Text>
-          <Text>{this.state.content}</Text>
+          {/* test */}
+          {/* <Text>{this.state.title}</Text>
+          <Text>{this.state.content}</Text> */}
         </ScrollView>
         <View style={{
           position: 'absolute',
           bottom: 60,
           right: 40,
         }}>
-          <MaterialIcons 
+          {/* <MaterialIcons 
             name="check"
             size={60} 
             style={styles.buttonSave}
@@ -77,6 +92,12 @@ export default class NewNote extends React.Component {
                 newNoteTitle: this.state.title,
                 newNoteContent: this.state.content,
               })} 
+          /> */}
+          <MaterialIcons 
+            name="check"
+            size={60} 
+            style={styles.buttonSave}
+            onPress={this.saveNote.bind(this)} 
           />
         </View>
       </View>
