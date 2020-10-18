@@ -36,7 +36,7 @@ function App() {
           name="Note" 
           component={Note}
           options={ ({ navigation, route }) => ({ 
-            title: 'Ghi chú mới', 
+            title: '', 
             /* headerRight: () => (
               <MaterialIcons 
                 name="check" 

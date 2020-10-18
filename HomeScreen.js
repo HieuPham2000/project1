@@ -1,48 +1,8 @@
 import * as React from 'react';
 import { View, Text, StyleSheet, StatusBar, ScrollView, TextInput, Button, Image} from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons'; 
-import { FlatList } from 'react-native-gesture-handler';
 import {db} from './src/config';
-import { color } from 'react-native-reanimated';
-
-const convertString = function(str) {
-  if (str.length > 300) {
-    return (str.slice(0,300) + '...');
-  }
-  return str;
-}
-
-const convertDay = function(num) {
-  if(num===0) {
-    return 'CN';
-  } else {
-    return `T${num+1}`;
-  }
-}
-
-const convertDate = function(newDateStr) {
-  let newDate = new Date(newDateStr);
-  let minute = (newDate.getMinutes() < 10) ? "0" + newDate.getMinutes() : newDate.getMinutes();
-  let str = `${convertDay(newDate.getDay())}, ${newDate.getDate()}/${newDate.getMonth()}/${newDate.getFullYear()}, ${newDate.getHours()}:${minute}`;
-  return str;
-}
-
-class NoteItem extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-  render() {
-
-    return (
-      <View style={styles.noteItem} >
-        <Text style={styles.itemDate}>{convertDate(this.props.date)}</Text>
-        <Text style={styles.itemTitle}>{convertString(this.props.title)}</Text>
-        <View style={styles.line} />
-        <Text style={styles.itemContent}>{convertString(this.props.content)}</Text>
-      </View>
-    )
-  }
-}
+import NoteItem from './NoteItem';
 
 const EmptyNote = () => {
   return (
@@ -81,15 +41,12 @@ export default class HomeScreen extends React.Component {
     }
   })
 }
-
-  componentWillUnmount() {
-    this._unsubscribe();
-  } */
+*/
 
   componentDidMount() {
     this._unsubscribe = this.props.navigation.addListener('focus', () => {
       db.ref('/notes').on('value', querySnapShot => {
-        let data = querySnapShot.val() ? querySnapShot.val() : [];
+        let data = querySnapShot.val() ? querySnapShot.val() : {};
         let noteItems = {...data};
         this.setState({
           notes: noteItems,
@@ -120,18 +77,6 @@ export default class HomeScreen extends React.Component {
           })}
         </ScrollView>
         </View> */}
-        {/* <View>
-          <FlatList 
-            keyExtractor={ item => item+1}
-            data={this.state.notes} 
-            renderItem={({item}) => (
-              <Note 
-                title={item.title}
-                content={item.content}
-              />
-            )}
-          />
-        </View> */}
         <View>
             {notesKeys.length > 0 ? (
               <ScrollView
@@ -147,6 +92,7 @@ export default class HomeScreen extends React.Component {
                   date={this.state.notes[key].date}
                   title={this.state.notes[key].title}
                   content={this.state.notes[key].content}
+                  navigation={this.props.navigation} // test
                 />
               ))}
               </ScrollView>
@@ -154,25 +100,6 @@ export default class HomeScreen extends React.Component {
               <EmptyNote />
             )}
         </View>
-        {/* <View>
-          {notesKeys.length > 0 ? (
-            <FlatList 
-            keyExtractor={key => key}
-            data={notesKeys} 
-            renderItem={({key}) => (
-              <Note 
-                key={key}
-                id={key}
-                title={this.state.notes[key].title}
-                content={this.state.notes[key].content}
-              />
-            )}
-            />
-          ) : (
-                <Text>No note item</Text>
-          )}
-        </View> */}
-
         <View style={{
           position: 'absolute',
           bottom: 60,
@@ -201,35 +128,4 @@ const styles = StyleSheet.create({
     backgroundColor: COLOR1,
     elevation: 8,
   },
-  noteItem: {
-    width: 340,
-    backgroundColor: 'white',
-    borderRadius: 10,
-    elevation: 5,
-    margin: 10,
-  },
-  itemTitle: {
-    fontWeight:'600',
-    fontSize: 22,
-    color: COLOR1,
-    paddingHorizontal: 10,
-    paddingTop: 8,
-    paddingBottom: 2,
-  },
-  line: {
-    borderWidth: 1,
-    /* opacity: 0.8, */
-    borderColor: COLOR3,
-    marginHorizontal: 10,
-  },
-  itemContent: {
-    fontSize: 18,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-  },
-  itemDate: {
-    fontSize: 12,
-    paddingHorizontal: 10,
-    color: COLOR1,
-  }
 })

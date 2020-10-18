@@ -4,36 +4,57 @@ import { StyleSheet, Text, TextInput, View, ScrollView, Alert } from 'react-nati
 import { MaterialIcons } from '@expo/vector-icons'; 
 import {db} from './src/config';
 
-export default class NewNote extends React.Component {
+export default class Note extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      id: '',
       title: '',
       content: '',
+      isChanged: false,
     }
   }
-
+  componentDidMount() {
+    this.setState({
+      id: this.props.route.params?.id??'', // tại sao trên web thì id: this.props.route.params.id không lỗi
+      title: this.props.route.params?.title??'',
+      content: this.props.route.params?.content??'',
+    })
+  }
   handleChangeTitle(text) {
     this.setState({
       title: text,
+      isChanged:  true,
     })
   }
   handleChangeContent(text) {
     this.setState({
       content: text,
+      isChanged: true,
     })
   }
   saveNote() {
-    if(this.state.title!=='' && this.state.content!=='') {
-      db.ref('/notes').push({
+    if(this.state.id==='') { // note mới
+      if(this.state.title!=='' && this.state.content!=='') {
+        db.ref('/notes').push({
+          title: this.state.title,
+          content: this.state.content,
+          date: (new Date()).toISOString() // date: (new Date()).toString() có được?
+        });
+        Alert.alert('Thông báo!', 'Ghi chú mới đã được tạo!');
+      } else {
+        Alert.alert('Thông báo!', 'Ghi chú rỗng đã bị xóa!');
+      }
+    } else if(this.state.isChanged===true) { // note cũ
+      db.ref('/notes').update({
+        [this.state.id] : {
         title: this.state.title,
         content: this.state.content,
-        date: (new Date()).toISOString() // date: (new Date()).toString() có được?
-      });
-      Alert.alert('Thông báo!', 'Ghi chú mới đã được tạo!');
-    } else {
-      Alert.alert('Thông báo!', 'Ghi chú rỗng đã bị xóa!');
+        date: (new Date()).toISOString()
+      }});
+      Alert.alert('Thông báo!', 'Đã chỉnh sửa ghi chú!');
     }
+    
     this.props.navigation.navigate('Home');
   }
   render() {
