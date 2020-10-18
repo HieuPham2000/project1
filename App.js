@@ -37,21 +37,23 @@ function App() {
           component={Note}
           options={ ({ navigation, route }) => ({ 
             title: '', 
-            /* headerRight: () => (
-              <MaterialIcons 
-                name="check" 
-                size={24} 
-                style={styles.buttonSave} 
-                onPress={() => {
-                  navigation.navigate(
-                    'Home',
-                    {
-                      newNoteTitle: 'Test 0',
-                      newNoteContent: 'test something',
-                    });
-                }}
-              />
-            ) */
+            headerRight: () => (
+              <View>
+                <MaterialIcons
+                  name="check"
+                  size={24}
+                  style={styles.buttonSave}
+                  onPress={navigation.saveNote}
+                />
+                {/* {navigation.noteId==''?(<View />):(
+                <MaterialIcons
+                  name="delete" 
+                  size={24} 
+                  color='white'
+                  onPress={navigation.deleteNote} 
+                />)} */}
+              </View>
+            )
           })}
         />
       </Stack.Navigator>

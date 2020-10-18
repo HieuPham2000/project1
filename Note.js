@@ -13,6 +13,8 @@ export default class Note extends React.Component {
       content: '',
       isChanged: false,
     }
+
+    this.props.navigation.saveNote = this.saveNote.bind(this);
   }
   componentDidMount() {
     this.setState({
@@ -20,6 +22,7 @@ export default class Note extends React.Component {
       title: this.props.route.params?.title??'',
       content: this.props.route.params?.content??'',
     })
+    /* this.props.navigation.noteId = this.state.id; */
   }
   handleChangeTitle(text) {
     this.setState({
@@ -33,9 +36,14 @@ export default class Note extends React.Component {
       isChanged: true,
     })
   }
+  /* deleteNote() {
+    db.ref('/notes').child(this.state.id).remove();
+    Alert.alert('Thông báo!', 'Đã xóa ghi chú!');
+    this.props.navigation.navigate('Home');
+  } */
   saveNote() {
     if(this.state.id==='') { // note mới
-      if(this.state.title!=='' && this.state.content!=='') {
+      if(this.state.title!=='' || this.state.content!=='') {
         db.ref('/notes').push({
           title: this.state.title,
           content: this.state.content,
@@ -121,12 +129,12 @@ export default class Note extends React.Component {
                 newNoteContent: this.state.content,
               })} 
           /> */}
-          <MaterialIcons 
+          {/* <MaterialIcons 
             name="check"
             size={60} 
             style={styles.buttonSave}
             onPress={this.saveNote.bind(this)} 
-          />
+          /> */}
         </View>
       </View>
     );
