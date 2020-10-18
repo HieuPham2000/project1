@@ -45,13 +45,20 @@ export default class Note extends React.Component {
       } else {
         Alert.alert('Thông báo!', 'Ghi chú rỗng đã bị xóa!');
       }
-    } else if(this.state.isChanged===true) { // note cũ
-      db.ref('/notes').update({
+    } else if(this.state.isChanged===true) { // note cũ không hề thay đổi
+      // update xong vị trí note không được cập nhật
+      /* db.ref('/notes').update({
         [this.state.id] : {
         title: this.state.title,
         content: this.state.content,
         date: (new Date()).toISOString()
-      }});
+      }}); */ 
+      db.ref('/notes').child(this.state.id).remove();
+      db.ref('/notes').push({
+        title: this.state.title,
+        content: this.state.content,
+        date: (new Date()).toISOString()
+      });
       Alert.alert('Thông báo!', 'Đã chỉnh sửa ghi chú!');
     }
     
