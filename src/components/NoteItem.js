@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { View, Text, StyleSheet} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons'; 
-import {db} from './src/config';
+import {db} from '../config';
 
 const convertString = function(str) {
   if (str.length > 300) {
@@ -41,7 +41,7 @@ export default class NoteItem extends React.Component {
     db.ref('/notes').child(this.props.id).remove();
   }
   editNoteItem() {
-    this.props.navigation.navigate('Note', {
+    this.props.navigation.navigate('EditNoteScreen', {
       id: this.props.id,
       title: this.props.title,
       content: this.props.content
@@ -51,6 +51,7 @@ export default class NoteItem extends React.Component {
     /* console.log(this.props); */
     return (
       <View style={styles.noteItem} >
+        <TouchableOpacity onPress={this.editNoteItem.bind(this)} delayPressIn={0} >
         <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignContent: 'center'}}>
           <Text style={styles.itemDate}>{convertDate(this.props.date)}</Text>
           <View  style={{ flex: 0.4, flexDirection: 'row', justifyContent:'space-around'}}>
@@ -62,6 +63,7 @@ export default class NoteItem extends React.Component {
         <Text style={styles.itemTitle}>{convertString(this.props.title)}</Text>
         <View style={styles.line} />
         <Text style={styles.itemContent}>{convertString(this.props.content)}</Text>
+        </TouchableOpacity>
       </View>
     )
   }
@@ -71,6 +73,11 @@ const COLOR1 = '#28df99';
 const COLOR2 = '#99f3bd';
 const COLOR3 = '#d2f6c5';
 const COLOR4 = '#f6f7d4';
+/* const COLOR4 = '#f8f1f1';
+const COLOR3 = '#ffa62b';
+const COLOR2 = '#db6400';
+const COLOR1 = '#16697a'; */
+
 const styles = StyleSheet.create({
   noteItem: {
     width: 340,

@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { View, Text, StyleSheet, StatusBar, ScrollView, TextInput, Button, Image} from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons'; 
-import {db} from './src/config';
-import NoteItem from './NoteItem';
+import {db} from '../config';
+import NoteItem from '../components/NoteItem';
 
 const EmptyNote = () => {
   return (
     <View style={{flex: 1, backgroundColor: 'white', alignItems:'center'}}>
       <Image
-            source={require('./assets/empty-state-img2.gif')}
+            source={require('../../assets/empty-state-img2.gif')}
             style={{
               flex: 0.6
             }}
@@ -121,6 +121,7 @@ const COLOR1 = '#28df99';
 const COLOR2 = '#99f3bd';
 const COLOR3 = '#d2f6c5';
 const COLOR4 = '#f6f7d4';
+
 const styles = StyleSheet.create({
   buttonAdd: {
     borderRadius: 50,

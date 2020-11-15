@@ -1,14 +1,14 @@
 import * as React from 'react';
-import { View, Text, StyleSheet, StatusBar, ScrollView, TextInput, Button } from 'react-native';
+import { View, Text, StyleSheet} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import Note from './Note';
+import Note from './screens/Note';
 import { MaterialIcons } from '@expo/vector-icons'; 
-import HomeScreen from './HomeScreen';
+import HomeScreen from './screens/HomeScreen';
 
 const Stack = createStackNavigator();
 
-function App() {
+export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator 
@@ -35,8 +35,8 @@ function App() {
         <Stack.Screen 
           name="Note" 
           component={Note}
-          options={ ({ navigation, route }) => ({ 
-            title: '', 
+          options={ ({ navigation }) => ({ 
+            title: 'Ghi chú mới', 
             headerRight: () => (
               <View>
                 <MaterialIcons
@@ -45,13 +45,30 @@ function App() {
                   style={styles.buttonSave}
                   onPress={navigation.saveNote}
                 />
-                {/* {navigation.noteId==''?(<View />):(
+              </View>
+            )
+          })}
+        />
+        <Stack.Screen 
+          name="EditNoteScreen" 
+          component={Note}
+          options={ ({ navigation}) => ({ 
+            title: '', 
+            headerRight: () => (
+              <View style={{ flexDirection: 'row'}}>
                 <MaterialIcons
                   name="delete" 
                   size={24} 
-                  color='white'
                   onPress={navigation.deleteNote} 
-                />)} */}
+                  style={styles.icon}
+                />
+                <MaterialIcons
+                  name="check"
+                  size={24}
+                  style={styles.buttonSave}
+                  onPress={navigation.saveNote}
+                  style={styles.icon}
+                />
               </View>
             )
           })}
@@ -65,12 +82,19 @@ const COLOR1 = '#28df99';
 const COLOR2 = '#99f3bd';
 const COLOR3 = '#d2f6c5';
 const COLOR4 = '#f6f7d4';
+
+/* const COLOR4 = '#f8f1f1';
+const COLOR3 = '#ffa62b';
+const COLOR2 = '#db6400';
+const COLOR1 = '#16697a'; */
 const styles = StyleSheet.create({
   buttonSave: {
     color: 'white',
     paddingRight: 15,
+  },
+  icon: {
+    margin: 10,
+    color: 'white',
   }
 
 })
-
-export default App;
