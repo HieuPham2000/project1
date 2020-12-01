@@ -24,7 +24,8 @@ export default class Note extends React.Component {
     this.props.navigation.saveNote = this.saveNote.bind(this);
     this.props.navigation.deleteNote = this.deleteNote.bind(this);
     //test
-    this.updateState = this.updateState.bind(this);
+    this.updateStateContent = this.updateStateContent.bind(this);
+    this.updateStateTitle = this.updateStateTitle.bind(this);
     this.redo = this.redo.bind(this);
     this.undo = this.undo.bind(this);
     // test
@@ -38,25 +39,37 @@ export default class Note extends React.Component {
   }
 
   // test
-  updateState(value) {
+  updateStateContent(value) {
     this.setState((state) => ({
-      past: [...state.past, state.content],
+      past: [...state.past,  {title: state.title, content: state.content}],
       content: value,
     })
     )
   };
 
-  undo() {
+  updateStateTitle(value) {
     this.setState((state) => ({
-      future: [...state.future, state.content],
-      content: state.past.pop(),
+      past: [...state.past,  {title: state.title, content: state.content}],
+      title: value,
+    })
+    )
+  };
+
+  undo() {
+    let tmp = this.state.past.pop();
+    this.setState((state) => ({
+      future: [...state.future, {title: state.title, content: state.content}],
+      content: tmp.content,
+      title: tmp.title,
     }))
   };
 
   redo() {
+    let tmp = this.state.future.pop();
     this.setState((state) => ({
-      past: [...state.past, state.content],
-      content: state.future.pop(),
+      past: [...state.past, {title: state.title, content: state.content}],
+      content: tmp.content,
+      title: tmp.title,
     }))
   };
   //
@@ -64,34 +77,28 @@ export default class Note extends React.Component {
 
 
   handleChangeTitle(text) {
+    //_.debounce(this.updateStateTitle(text), 1000);
+    this.updateStateTitle(text);
     this.setState({
       title: text,
       isChanged: true,
     })
+
   }
 
-  // khả năng liên quan đến bất đồng bộ nên in ra không chính xác
-  async handleChangeContent(text) {
-    await this.updateState(text);
-    await this.setState((state) => ({
-      // test
-      /* past: [...state.past, state.content],
-      canUndo: this.state.past.length > 0,
-      canRedo: this.state.future.length > 0, */
-      // test
+  handleChangeContent(text) {
+    this.updateStateContent(text);
+    this.setState({
       content: text,
       isChanged: true,
-    }))
-    console.log('past: ' + this.state.past)
-    console.log('present: ' + this.state.content)
-    console.log('future: ' + this.state.future)
+    })
   }
-  deleteNote() {
-    db.ref('/notes').child(this.state.id).remove();
-    Alert.alert('Thông báo!', 'Đã xóa ghi chú!');
+  async deleteNote() {
+    await db.ref('/notes').child(this.state.id).remove()
+    Alert.alert('Thông báo!', 'Đã xóa ghi chú!')
     this.props.navigation.navigate('Home');
   }
-  saveNote() {
+  async saveNote() {
     if (this.state.id === '') { // note mới
       if (this.state.title !== '' || this.state.content !== '') {
         db.ref('/notes').push({
@@ -111,8 +118,8 @@ export default class Note extends React.Component {
         content: this.state.content,
         date: (new Date()).toISOString()
       }}); */
-      db.ref('/notes').child(this.state.id).remove();
-      db.ref('/notes').push({
+      await db.ref('/notes').child(this.state.id).remove();
+      await db.ref('/notes').push({
         title: this.state.title,
         content: this.state.content,
         date: (new Date()).toISOString()
@@ -220,14 +227,11 @@ const COLOR2 = '#99f3bd';
 const COLOR3 = '#d2f6c5';
 const COLOR4 = '#f6f7d4';
 const COLOR5 = 'white';
-/* const COLOR4 = '#f8f1f1';
-const COLOR3 = '#ffa62b';
-const COLOR2 = '#db6400';
-const COLOR1 = '#16697a'; */
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLOR4,
+    backgroundColor: COLOR5,
   },
   funcbutton: {
     flex: 1,
@@ -253,7 +257,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   contentWrapper: {
-    backgroundColor: COLOR4,
+    backgroundColor: COLOR5,
   },
   content: {
     fontSize: 18,

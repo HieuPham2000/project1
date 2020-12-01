@@ -6,9 +6,13 @@ import Note from './screens/Note';
 import { MaterialIcons } from '@expo/vector-icons'; 
 import HomeScreen from './screens/HomeScreen';
 
+import { YellowBox } from 'react-native';
+
+
 const Stack = createStackNavigator();
 
 export default function App() {
+  YellowBox.ignoreWarnings(['Setting a timer']);
   return (
     <NavigationContainer>
       <Stack.Navigator 

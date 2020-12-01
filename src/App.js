@@ -1,14 +1,19 @@
 import * as React from 'react';
-import { View, Text, StyleSheet} from 'react-native';
+import { View, Text, StyleSheet, LogBox} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Note from './screens/Note';
 import { MaterialIcons } from '@expo/vector-icons'; 
 import HomeScreen from './screens/HomeScreen';
 
+import { YellowBox } from 'react-native';
+
+
 const Stack = createStackNavigator();
 
 export default function App() {
+  YellowBox.ignoreWarnings(['Setting a timer']);
+  LogBox.ignoreLogs(['Setting a timer'])
   return (
     <NavigationContainer>
       <Stack.Navigator 
