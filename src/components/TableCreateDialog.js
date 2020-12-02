@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { Button, StyleSheet, TextInput, View } from "react-native";
+import { Button, StyleSheet, TextInput, View, TouchableOpacity } from "react-native";
 import Dialog from "react-native-dialog";
+import { AntDesign } from '@expo/vector-icons';
 
 export default function App() {
   const [visible, setVisible] = useState(false);
@@ -24,6 +25,9 @@ export default function App() {
   
   return (
     <View style={styles.container}>
+      <TouchableOpacity>
+        <AntDesign name="table" size={24} color={COLOR5} />
+      </TouchableOpacity>
       <Button title="Tạo bảng" onPress={showDialog} />
       <Dialog.Container visible={visible} onBackdropPress={handleCancel}>
         <Dialog.Title>Tạo bảng</Dialog.Title>

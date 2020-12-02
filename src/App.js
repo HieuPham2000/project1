@@ -1,105 +1,110 @@
-import * as React from 'react';
-import { View, Text, StyleSheet, LogBox} from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import Note from './screens/Note';
-import { MaterialIcons } from '@expo/vector-icons'; 
-import HomeScreen from './screens/HomeScreen';
-
-import { YellowBox } from 'react-native';
-
-
-const Stack = createStackNavigator();
+import React, { useState } from "react";
+import { Button, StyleSheet, TextInput, View, TouchableOpacity } from "react-native";
+import Dialog from "react-native-dialog";
+import { AntDesign } from '@expo/vector-icons';
 
 export default function App() {
-  YellowBox.ignoreWarnings(['Setting a timer']);
-  LogBox.ignoreLogs(['Setting a timer'])
+  const [visible, setVisible] = useState(false);
+  const [column, setColumn] = useState("");
+  const [row, setRow] = useState("");
+
+  const showDialog = () => {
+    setRow("");
+    setColumn("");
+    setVisible(true);
+  };
+
+  const handleCancel = () => {
+    setVisible(false);
+  };
+
+  const handleConfirm = () => {
+    setVisible(false);
+  };
+
+  
   return (
-    <NavigationContainer>
-      <Stack.Navigator 
-        initialRouteName="Home" 
-        screenOptions={{
-          headerStyle: {
-            backgroundColor: COLOR1,
-          },
-          headerTintColor: 'white',
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },
-          headerTitleAlign:'center'
-        }}
-      >
-        <Stack.Screen 
-          name="Home" 
-          component={HomeScreen} 
-          options={{ 
-            title: 'Ghi chú của bạn', 
-          }}
-          
+    <View style={styles.container}>
+      <TouchableOpacity>
+        <AntDesign name="table" size={40} color={"black"} onPress={showDialog}/>
+      </TouchableOpacity>
+      {/* <Button title="Tạo bảng" onPress={showDialog} /> */}
+
+      <Dialog.Container visible={visible} onBackdropPress={handleCancel}>
+        <Dialog.Title style={styles.title}>Tạo bảng</Dialog.Title>
+        {
+        (!column||!row)&&<Dialog.Description style={styles.doing}>
+          Mời bạn nhập kích thước bảng
+        </Dialog.Description>
+        }
+        
+        <Dialog.Input //label="Số hàng"
+          placeholder = {"Nhập số hàng"}
+          onChangeText={(text)=>{setRow(text)}}
+          value={row}
+          style = {styles.input}
+          keyboardType={"numeric"}
+          maxLength={2}
         />
-        <Stack.Screen 
-          name="Note" 
-          component={Note}
-          options={ ({ navigation }) => ({ 
-            title: 'Ghi chú mới', 
-            headerRight: () => (
-              <View>
-                <MaterialIcons
-                  name="check"
-                  size={24}
-                  style={styles.buttonSave}
-                  onPress={navigation.saveNote}
-                />
-              </View>
-            )
-          })}
+        <Dialog.Input //label="Số cột"
+          placeholder = {"Nhập số cột"}
+          onChangeText={(text)=>{setColumn(text)}}
+          value={column}
+          style = {styles.input}
+          keyboardType={"numeric"}
+          maxLength={2}
         />
-        <Stack.Screen 
-          name="EditNoteScreen" 
-          component={Note}
-          options={ ({ navigation}) => ({ 
-            title: '', 
-            headerRight: () => (
-              <View style={{ flexDirection: 'row'}}>
-                <MaterialIcons
-                  name="delete" 
-                  size={24} 
-                  onPress={navigation.deleteNote} 
-                  style={styles.icon}
-                />
-                <MaterialIcons
-                  name="check"
-                  size={24}
-                  style={styles.buttonSave}
-                  onPress={navigation.saveNote}
-                  style={styles.icon}
-                />
-              </View>
-            )
-          })}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+        
+        {
+        column&&row&&<Dialog.Input 
+          style={styles.done}
+          editable={false}
+        > 
+          Tạo bảng {row}x{column}
+        </Dialog.Input>
+        }
+
+        <Dialog.Button label="Hủy" onPress={handleCancel} />
+        <Dialog.Button label="Xác nhận" onPress={handleConfirm} />
+      </Dialog.Container>
+      
+      <View>
+        <View style={{flexDirection:'row'}}>
+          <TextInput style={styles.cell}/>
+          <TextInput style={styles.cell}/>
+          <TextInput style={styles.cell}/>
+        </View>
+        <View style={{flexDirection:'row'}}>
+          <TextInput style={styles.cell}/>
+          <TextInput style={styles.cell}/>
+          <TextInput style={styles.cell}/>
+        </View>
+      </View>
+    </View>
   );
 }
 
-const COLOR1 = '#28df99';
-const COLOR2 = '#99f3bd';
-const COLOR3 = '#d2f6c5';
-const COLOR4 = '#f6f7d4';
-
-/* const COLOR4 = '#f8f1f1';
-const COLOR3 = '#ffa62b';
-const COLOR2 = '#db6400';
-const COLOR1 = '#16697a'; */
 const styles = StyleSheet.create({
-  buttonSave: {
-    color: 'white',
-    paddingRight: 15,
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
-  icon: {
-    margin: 10,
-    color: 'white',
+  title: {
+    fontWeight: '700',
+  },
+  done: {
+    color: "green",
+  },
+  doing: {
+    color: "red",
+  },
+  input: {
+    borderBottomWidth: 1,
+    //borderBottomColor: "black"
+  },
+  cell: {
+    borderWidth: 1,
   }
-
-})
+});

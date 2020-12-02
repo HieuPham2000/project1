@@ -4,11 +4,9 @@ import { StyleSheet, Text, TextInput, View, ScrollView, Alert, TouchableOpacity 
 import { MaterialIcons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
-import FuncButton from '../components/FuncButton';
-import TestTable from '../components/TestTable';
 import { db } from '../config';
 
-export default class Note extends React.Component {
+export default class Note extends Component {
   constructor(props) {
     super(props);
     this.state = {
