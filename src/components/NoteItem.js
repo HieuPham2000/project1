@@ -21,6 +21,7 @@ const convertDay = function (num) {
 const convertDate = function (newDateStr) {
   let newDate = new Date(newDateStr);
   let minute = (newDate.getMinutes() < 10) ? "0" + newDate.getMinutes() : newDate.getMinutes();
+  // vì month tính từ 0 nên phải cộng thêm 1
   let str = `${convertDay(newDate.getDay())}, ${newDate.getDate()}/${newDate.getMonth() + 1}/${newDate.getFullYear()}, ${newDate.getHours()}:${minute}`;
   return str;
 }

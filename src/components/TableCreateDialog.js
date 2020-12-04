@@ -8,23 +8,104 @@ import { ScrollView } from "react-native-gesture-handler";
 class Table extends Component {
   constructor(props) {
     super(props);
-    this.renderRow = this.renderRow.bind(this);
+    this.state = {
+      row: 0,
+      col: 0,
+      tableData: [],
+      widthCell: [],
+    };
+
+    this.handleChangeText = this.handleChangeText.bind(this);
   }
 
-  renderCell(data) {
+  //async UNSAFE_componentWillMout
+  /* async componentDidMount() {
+    let row = await this.props.numberOfRow;
+    let col = await this.props.numberOfCol;
+    console.log(row + " - " + col);
+    let tmp = new Array(row);
+    for(var i = 0; i < row; i++) {
+      tmp[i] = new Array(col);
+      tmp[i].fill("");
+    }
+    let w = new Array(col);
+    w.fill(100)
+    this.setState({
+      tableData: [...tmp],
+      widthCell: [...w]
+    })
+  } */
+
+  componentDidUpdate() {
+    let numberOfRow = this.props.numberOfRow;
+    let numberOfCol = this.props.numberOfCol;
+    if(this.state.row!=numberOfRow || this.state.col!=numberOfCol) {
+      let tmp = new Array(numberOfRow);
+      for(var i = 0; i < numberOfRow; i++) {
+        tmp[i] = new Array(numberOfCol);
+        tmp[i].fill("");
+      }
+      let w = new Array(numberOfCol);
+      w.fill(100)
+    this.setState({
+      row: numberOfRow,
+      col: numberOfCol,
+      tableData: [...tmp],
+      widthCell: [...w]
+    })
+    }
+    
+  }
+
+ 
+  handleChangeText = (r, c, text) => {
+    let tmp = [...this.state.tableData];
+    tmp[r][c] = text;
+    this.setState({
+      tableData: [...tmp]
+    })
+  }
+
+  find_dimesions(c, layout){
+    const {x, y, width, height} = layout;
+    /* let tmp = [...this.state.widthCell];
+    tmp[c] = Math.max(width, 100);
+    this.setState({
+      widthCell: [...tmp]
+    }) */
+    /* console.log(x);
+    console.log(y);
+    console.log(width);
+    console.log(height); */
+  }
+
+  renderCell(r, c) {
+    //console.log(this.state.widthCell);
+    //console.log(this.state.widthCell.length);
+    if(this.state.tableData.length > 0 && this.state.widthCell.length > 0) {
     return (
-      <View style={{ flex: 1, alignSelf:'stretch', borderWidth:1, width: 50 }}>
-          <Text>{data}</Text> 
+      <View 
+      //onLayout={(event) => { this.find_dimesions(c, event.nativeEvent.layout)}}
+      key = {c} 
+      style={{ flex: 1, alignSelf:'stretch', borderWidth:1, width: 100}}>
+          <TextInput 
+          value={this.state.tableData[r][c]} 
+          onChangeText={(text) => this.handleChangeText(r, c, text)}
+          multiline={true}
+          style={{margin: 5, fontSize: 16}}
+          />
       </View>
     )
   }
+  }
+
   renderRow(r) {
     const data = new Array(this.props.numberOfCol);
     data.fill(10);
     return (
-      <View style={{ flex: 1, alignSelf:'stretch', flexDirection: 'row', height:50}}>
+      <View key={r} style={{ flex: 1, alignSelf:'stretch', flexDirection: 'row',}}>
         {data.map((i, c) => {
-          return this.renderCell(r + " - " + (c+1))
+          return this.renderCell(r, c)
         })}
       </View>
     );
@@ -34,9 +115,9 @@ class Table extends Component {
     const data = new Array(this.props.numberOfRow);
     data.fill(10);
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', margin: 20 }}>
         {data.map((i, r) => {
-          return this.renderRow(r+1)
+          return this.renderRow(r)
         })}
       </View>
     );
